@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaveAnyMedia - Convert Any Social Media Video to MP4 or MP3</title>
+  <meta name="description" content="SaveAnyMedia.com is the best free video converter. Download and convert videos from YouTube, TikTok, Instagram, Twitter, and Facebook to MP4 or MP3 instantly." />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0d3b2f7.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="container">
+    <h1><span class="logo">SaveAnyMedia</span></h1>
+    <p class="tagline">Download from YouTube, TikTok, Instagram, Twitter, and Facebook in MP4 or MP3 formats — fast and free!</p>
+
+    <form id="download-form">
+      <input type="text" id="url" placeholder="Paste video link here..." required />
+      <select id="format">
+        <option value="mp4">MP4</option>
+        <option value="mp3">MP3</option>
+      </select>
+      <button type="submit">Download</button>
+    </form>
+
+    <div class="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+
+    <p id="status"></p>
+    <a id="download-link" href="#" download style="display: none;">Click here to download</a>
+
+    <div class="social-icons">
+      <i class="fab fa-youtube"></i>
+      <i class="fab fa-facebook"></i>
+      <i class="fab fa-instagram"></i>
+      <i class="fab fa-twitter"></i>
+      <i class="fab fa-tiktok"></i>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('download-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      const format = document.getElementById('format').value;
+      const status = document.getElementById('status');
+      const progressBar = document.getElementById('progress-bar');
+      const downloadLink = document.getElementById('download-link');
+
+      // Reset
+      status.textContent = '';
+      progressBar.style.width = '0%';
+      progressBar.classList.add('active');
+      downloadLink.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, format })
+        });
+
+        const data = await response.json();
+
+        if (data.downloadUrl) {
+          progressBar.style.width = '100%';
+          status.textContent = 'Download ready!';
+          downloadLink.href = data.downloadUrl;
+          downloadLink.style.display = 'inline-block';
+        } else {
+          status.textContent = data.error || 'Something went wrong';
+        }
+      } catch (err) {
+        status.textContent = 'An error occurred while downloading.';
+      }
+
+      progressBar.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
