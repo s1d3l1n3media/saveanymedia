@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SaveAnyMedia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>SaveAnyMedia</h1>
+  <form id="download-form">
+    <input type="text" id="url" placeholder="Paste video link here" required />
+    <select id="format">
+      <option value="mp4">MP4</option>
+      <option value="mp3">MP3</option>
+    </select>
+    <button type="submit">Download</button>
+  </form>
+  <p id="status"></p>
+
+  <script>
+    document.getElementById('download-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      const format = document.getElementById('format').value;
+
+      const res = await fetch('/api/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, format }),
+      });
+
+      const data = await res.json();
+      document.getElementById('status').innerText = data.message || data.error;
+    });
+  </script>
+</body>
+</html>
