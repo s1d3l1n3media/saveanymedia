@@ -8,6 +8,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DOWNLOAD_DIR = path.join(__dirname, 'downloads');
+const COOKIES_PATH = path.join(__dirname, 'cookies.txt');
 
 // Create downloads folder if missing
 if (!fs.existsSync(DOWNLOAD_DIR)) {
@@ -31,7 +32,8 @@ app.post('/api/download', (req, res) => {
   const filename = `${id}.${ext}`;
   const outputPath = path.join(DOWNLOAD_DIR, filename);
 
-  let command = `yt-dlp "${url}" -o "${outputPath}"`;
+  // yt-dlp command using cookies
+  let command = `yt-dlp --cookies "${COOKIES_PATH}" "${url}" -o "${outputPath}"`;
 
   if (format === 'mp3') {
     command += ' --extract-audio --audio-format mp3';
