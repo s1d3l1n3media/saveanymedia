@@ -4,54 +4,247 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SaveAnyMedia - Convert Any Social Media Video to MP4 or MP3</title>
-  <meta name="description" content="SaveAnyMedia.com is the best free video converter. Download and convert videos from YouTube, TikTok, Instagram, Twitter, and Facebook to MP4 or MP3 instantly." />
+  <meta name="description" content="SaveAnyMedia is the only site that converts videos from YouTube, TikTok, Instagram, Twitter, and Facebook all in one place. Easily download videos as MP4 or MP3 with simple steps and fast conversions." />
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/a2e0d3b2f7.js" crossorigin="anonymous"></script>
+  <style>
+    /* Simple styling to keep layout clean and responsive */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px 20px 50px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgb(0 0 0 / 0.1);
+      text-align: center;
+    }
+    h1 .logo {
+      color: #2d89ef;
+      font-weight: 700;
+      font-size: 2.8rem;
+    }
+    .tagline {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    input[type="text"] {
+      flex: 1 1 300px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    select {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 90px;
+    }
+    button {
+      background-color: #2d89ef;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1767c0;
+    }
+    .progress-container {
+      background: #e1e1e1;
+      border-radius: 4px;
+      height: 20px;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto 10px auto;
+      position: relative;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #2d89ef;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      text-align: center;
+      color: white;
+      line-height: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    #status {
+      min-height: 24px;
+      font-weight: 600;
+      color: #444;
+    }
+    #download-link {
+      display: none;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #2d89ef;
+      text-decoration: none;
+      border: 1px solid #2d89ef;
+      padding: 8px 15px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    #download-link:hover {
+      background-color: #2d89ef;
+      color: white;
+    }
+    .social-icons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      font-size: 2rem;
+    }
+    .social-icons a {
+      color: #666;
+      transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+      color: #2d89ef;
+    }
+    .description-section {
+      text-align: left;
+      margin-top: 40px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .steps-section {
+      margin-top: 40px;
+      text-align: left;
+    }
+    .steps-section h2 {
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #2d89ef;
+    }
+    .steps-section ol {
+      padding-left: 20px;
+      font-size: 1rem;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 20px 0;
+      font-size: 0.9rem;
+      color: #777;
+      text-align: center;
+      border-top: 1px solid #ddd;
+    }
+    footer a {
+      color: #2d89ef;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      select, button, input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .social-icons {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1><span class="logo">SaveAnyMedia</span></h1>
-    <p class="tagline">Download from YouTube, TikTok, Instagram, Twitter, and Facebook in MP4 or MP3 formats — fast and free!</p>
+    <p class="tagline">Download from YouTube, TikTok, Instagram, Twitter, and Facebook in MP4 or MP3 formats — fast, free, and easy!</p>
 
-    <form id="download-form">
-      <input type="text" id="url" placeholder="Paste video link here..." required />
-      <select id="format">
+    <form id="download-form" aria-label="Video download form">
+      <input type="text" id="url" placeholder="Paste video link here..." required aria-required="true" aria-label="Video URL" />
+      <select id="format" aria-label="Select format">
         <option value="mp4">MP4</option>
         <option value="mp3">MP3</option>
       </select>
       <button type="submit">Download</button>
     </form>
 
-    <div class="progress-container">
-      <div id="progress-bar"></div>
+    <div class="progress-container" aria-live="polite" aria-atomic="true" aria-label="Download progress">
+      <div id="progress-bar">0%</div>
     </div>
 
-    <p id="status"></p>
-    <a id="download-link" href="#" download style="display: none;">Click here to download</a>
+    <p id="status" role="alert" aria-live="assertive"></p>
+    <a id="download-link" href="#" download>Click here to download</a>
 
-    <div class="social-icons">
-      <i class="fab fa-youtube"></i>
-      <i class="fab fa-facebook"></i>
-      <i class="fab fa-instagram"></i>
-      <i class="fab fa-twitter"></i>
-      <i class="fab fa-tiktok"></i>
+    <div class="social-icons" aria-label="Social media links">
+      <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
     </div>
+
+    <section class="description-section" aria-label="Site description">
+      <h2>Why Choose SaveAnyMedia?</h2>
+      <p>SaveAnyMedia is the only online converter that supports all your favorite social media platforms in one place. Whether it's YouTube, TikTok, Instagram, Twitter, or Facebook, you can quickly convert videos to MP4 or MP3 without the hassle of switching sites.</p>
+      <p>Enjoy fast and free downloads, an easy-to-use interface, and reliable service that puts you in control of your media. No registrations, no hidden fees—just simple, hassle-free conversions.</p>
+    </section>
+
+    <section class="steps-section" aria-label="How to use SaveAnyMedia">
+      <h2>How to Use SaveAnyMedia</h2>
+      <ol>
+        <li>Copy the video link from YouTube, TikTok, Instagram, Twitter, or Facebook.</li>
+        <li>Paste the link into the box above.</li>
+        <li>Use the dropdown to select your desired format: MP4 (video) or MP3 (audio).</li>
+        <li>Click the "Download" button.</li>
+        <li>Wait for the conversion to complete and then click the download link.</li>
+      </ol>
+    </section>
   </div>
+
+  <footer>
+    <p>©2025 SaveAnyMedia - All rights reserved</p>
+    <p>
+      <a href="/terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a> |
+      <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> |
+      <a href="/copyright.html" target="_blank" rel="noopener noreferrer">Copyright Claims</a>
+    </p>
+  </footer>
 
   <script>
     document.getElementById('download-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const url = document.getElementById('url').value;
+      const url = document.getElementById('url').value.trim();
       const format = document.getElementById('format').value;
       const status = document.getElementById('status');
       const progressBar = document.getElementById('progress-bar');
       const downloadLink = document.getElementById('download-link');
 
-      // Reset
+      // Reset UI
       status.textContent = '';
       progressBar.style.width = '0%';
-      progressBar.classList.add('active');
+      progressBar.textContent = '0%';
       downloadLink.style.display = 'none';
 
       try {
@@ -65,17 +258,21 @@
 
         if (data.downloadUrl) {
           progressBar.style.width = '100%';
+          progressBar.textContent = '100%';
           status.textContent = 'Download ready!';
           downloadLink.href = data.downloadUrl;
           downloadLink.style.display = 'inline-block';
+          downloadLink.focus();
         } else {
           status.textContent = data.error || 'Something went wrong';
+          progressBar.style.width = '0%';
+          progressBar.textContent = '0%';
         }
       } catch (err) {
         status.textContent = 'An error occurred while downloading.';
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
       }
-
-      progressBar.classList.remove('active');
     });
   </script>
 </body>
