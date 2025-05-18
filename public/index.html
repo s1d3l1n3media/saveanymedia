@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SaveAnyMedia - Convert Any Social Media Video to MP4 or MP3</title>
   <meta name="description" content="SaveAnyMedia is the only site that converts videos from YouTube, TikTok, Instagram, Twitter, and Facebook all in one place. Easily download videos as MP4 or MP3 with simple steps and fast conversions." />
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/a2e0d3b2f7.js" crossorigin="anonymous"></script>
   <style>
-    /* Simple styling to keep layout clean and responsive */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -26,9 +25,15 @@
       text-align: center;
     }
     h1 .logo {
-      color: #2d89ef;
       font-weight: 700;
       font-size: 2.8rem;
+    }
+    h1 a.logo-link {
+      color: #000;
+      text-decoration: none;
+    }
+    h1 a.logo-link:hover {
+      text-decoration: underline;
     }
     .tagline {
       font-size: 1.1rem;
@@ -43,7 +48,8 @@
       flex-wrap: wrap;
     }
     input[type="text"] {
-      flex: 1 1 300px;
+      flex: 1 1 250px;  /* smaller width */
+      max-width: 400px;
       padding: 10px;
       font-size: 1rem;
       border: 1px solid #ccc;
@@ -76,7 +82,6 @@
       width: 100%;
       max-width: 600px;
       margin: 20px auto 10px auto;
-      position: relative;
     }
     #progress-bar {
       height: 100%;
@@ -160,7 +165,6 @@
       text-decoration: underline;
     }
 
-    /* Responsive */
     @media (max-width: 600px) {
       form {
         flex-direction: column;
@@ -178,7 +182,7 @@
 </head>
 <body>
   <div class="container">
-    <h1><span class="logo">SaveAnyMedia</span></h1>
+    <h1><a href="/" class="logo-link" aria-label="Go to homepage">SaveAnyMedia</a></h1>
     <p class="tagline">Download from YouTube, TikTok, Instagram, Twitter, and Facebook in MP4 or MP3 formats — fast, free, and easy!</p>
 
     <form id="download-form" aria-label="Video download form">
@@ -198,11 +202,11 @@
     <a id="download-link" href="#" download>Click here to download</a>
 
     <div class="social-icons" aria-label="Social media links">
-      <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
     </div>
 
     <section class="description-section" aria-label="Site description">
@@ -226,9 +230,9 @@
   <footer>
     <p>©2025 SaveAnyMedia - All rights reserved</p>
     <p>
-      <a href="/terms.html" target="_blank" rel="noopener noreferrer">Terms of Use</a> |
-      <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> |
-      <a href="/copyright.html" target="_blank" rel="noopener noreferrer">Copyright Claims</a>
+      <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> |
+      <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> |
+      <a href="/copyright" target="_blank" rel="noopener">Copyright Claims</a>
     </p>
   </footer>
 
@@ -246,32 +250,43 @@
       progressBar.style.width = '0%';
       progressBar.textContent = '0%';
       downloadLink.style.display = 'none';
+      downloadLink.href = '#';
+
+      if (!url) {
+        status.textContent = 'Please enter a video URL.';
+        return;
+      }
+
+      status.textContent = 'Starting conversion...';
 
       try {
-        const response = await fetch('/api/download', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, format })
-        });
+        // Simulate progress for demo
+        for (let i = 0; i <= 100; i += 10) {
+          await new Promise(r => setTimeout(r, 200));
+          progressBar.style.width = i + '%';
+          progressBar.textContent = i + '%';
+        }
 
-        const data = await response.json();
+        // Replace this URL with your actual backend API endpoint
+        // const response = await fetch(`/api/download?url=${encodeURIComponent(url)}&format=${format}`);
+        // const data = await response.json();
 
-        if (data.downloadUrl) {
-          progressBar.style.width = '100%';
-          progressBar.textContent = '100%';
-          status.textContent = 'Download ready!';
+        // For demo, mock data:
+        const data = {
+          success: true,
+          downloadUrl: 'https://example.com/download/video.' + format
+        };
+
+        if (data.success) {
+          status.textContent = 'Conversion complete! Click the link below to download.';
           downloadLink.href = data.downloadUrl;
           downloadLink.style.display = 'inline-block';
-          downloadLink.focus();
+          downloadLink.setAttribute('download', '');
         } else {
-          status.textContent = data.error || 'Something went wrong';
-          progressBar.style.width = '0%';
-          progressBar.textContent = '0%';
+          status.textContent = 'Conversion failed. Please try again.';
         }
-      } catch (err) {
-        status.textContent = 'An error occurred while downloading.';
-        progressBar.style.width = '0%';
-        progressBar.textContent = '0%';
+      } catch (error) {
+        status.textContent = 'Error during conversion: ' + error.message;
       }
     });
   </script>
