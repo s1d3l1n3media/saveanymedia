@@ -7,7 +7,8 @@
   <meta name="description" content="SaveAnyMedia is the only site that converts videos from YouTube, TikTok, Instagram, Twitter, and Facebook all in one place. Easily download videos as MP4 or MP3 with simple steps and fast conversions." />
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/a2e0d3b2f7.js" crossorigin="anonymous"></script>
+  <!-- Icons8 CDN for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -202,11 +203,11 @@
     <a id="download-link" href="#" download>Click here to download</a>
 
     <div class="social-icons" aria-label="Social media links">
-      <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube"><img src="https://img.icons8.com/color/48/000000/youtube-play.png" alt="YouTube" /></a>
+      <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok"><img src="https://img.icons8.com/color/48/000000/tiktok--v1.png" alt="TikTok" /></a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram" /></a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter"><img src="https://img.icons8.com/color/48/000000/twitter--v1.png" alt="Twitter" /></a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" /></a>
     </div>
 
     <section class="description-section" aria-label="Site description">
@@ -220,39 +221,38 @@
       <ol>
         <li>Copy the video link from YouTube, TikTok, Instagram, Twitter, or Facebook.</li>
         <li>Paste the link into the box above.</li>
-        <li>Use the dropdown to select your desired format: MP4 (video) or MP3 (audio).</li>
-        <li>Click the "Download" button.</li>
-        <li>Wait for the conversion to complete and then click the download link.</li>
+        <li>Select your desired format: MP4 for video, MP3 for audio.</li>
+        <li>Click <strong>Download</strong> and wait for the conversion to complete.</li>
+        <li>Click the <em>Click here to download</em> link to save your file.</li>
       </ol>
     </section>
   </div>
 
   <footer>
-    <p>©2025 SaveAnyMedia - All rights reserved</p>
-    <p>
-      <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> |
-      <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> |
-      <a href="/copyright" target="_blank" rel="noopener">Copyright Claims</a>
-    </p>
+    &copy; 2025 SaveAnyMedia. 
+    <a href="/privacy.html">Privacy Policy</a> | 
+    <a href="/terms.html">Terms of Service</a>
   </footer>
 
   <script>
-    document.getElementById('download-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const url = document.getElementById('url').value.trim();
-      const format = document.getElementById('format').value;
-      const status = document.getElementById('status');
-      const progressBar = document.getElementById('progress-bar');
-      const downloadLink = document.getElementById('download-link');
+    const form = document.getElementById('download-form');
+    const urlInput = document.getElementById('url');
+    const formatSelect = document.getElementById('format');
+    const progressBar = document.getElementById('progress-bar');
+    const status = document.getElementById('status');
+    const downloadLink = document.getElementById('download-link');
 
-      // Reset UI
-      status.textContent = '';
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      downloadLink.style.display = 'none';
       progressBar.style.width = '0%';
       progressBar.textContent = '0%';
-      downloadLink.style.display = 'none';
-      downloadLink.href = '#';
+      status.textContent = '';
 
-      if (!url) {
+      const videoUrl = urlInput.value.trim();
+      const format = formatSelect.value;
+
+      if (!videoUrl) {
         status.textContent = 'Please enter a video URL.';
         return;
       }
@@ -260,33 +260,29 @@
       status.textContent = 'Starting conversion...';
 
       try {
-        // Simulate progress for demo
-        for (let i = 0; i <= 100; i += 10) {
-          await new Promise(r => setTimeout(r, 200));
-          progressBar.style.width = i + '%';
-          progressBar.textContent = i + '%';
+        // POST to backend API
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: videoUrl, format }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Download failed');
         }
 
-        // Replace this URL with your actual backend API endpoint
-        // const response = await fetch(`/api/download?url=${encodeURIComponent(url)}&format=${format}`);
-        // const data = await response.json();
+        const data = await response.json();
 
-        // For demo, mock data:
-        const data = {
-          success: true,
-          downloadUrl: 'https://example.com/download/video.' + format
-        };
+        // Update UI on success
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+        status.textContent = 'Conversion completed! Your download is ready.';
+        downloadLink.href = data.downloadUrl;
+        downloadLink.style.display = 'inline-block';
 
-        if (data.success) {
-          status.textContent = 'Conversion complete! Click the link below to download.';
-          downloadLink.href = data.downloadUrl;
-          downloadLink.style.display = 'inline-block';
-          downloadLink.setAttribute('download', '');
-        } else {
-          status.textContent = 'Conversion failed. Please try again.';
-        }
       } catch (error) {
-        status.textContent = 'Error during conversion: ' + error.message;
+        status.textContent = `Error: ${error.message}`;
       }
     });
   </script>
